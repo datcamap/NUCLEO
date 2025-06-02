@@ -123,7 +123,7 @@ int main(void)
 			countTIM = 0;
 			flgss.tim_capture_cplt = FALSE;
 		}
-		// Go to sleep
+		// Go to bed
 		__WFI();
 	}
 	for ( ; ; );
