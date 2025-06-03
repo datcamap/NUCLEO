@@ -124,7 +124,11 @@ int main(void)
 			flgss.tim_capture_cplt = FALSE;
 		}
 		// Go to bed
+		HAL_SuspendTick();
 		__WFI();
+		HAL_ResumeTick();
+//		sprintf(mess, "Good morning");
+//		HAL_UART_Transmit(&huart2, (uint8_t*)mess, (uint16_t)strlen(mess), HAL_MAX_DELAY);
 	}
 	for ( ; ; );
 
@@ -251,7 +255,7 @@ void GPIO_Config(void)
 	HAL_GPIO_Init(GPIOA, &gpioled);
 
 	gpiobutt.Pin = GPIO_PIN_13;
-	gpiobutt.Mode = GPIO_MODE_IT_FALLING;
+	gpiobutt.Mode = GPIO_MODE_EVT_FALLING;
 	gpiobutt.Pull = GPIO_NOPULL;
 	HAL_GPIO_Init(GPIOC, &gpiobutt);
 
@@ -453,7 +457,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 			uint32_t rgb_PWM[3];
 			for (uint8_t i=0; i<3; i++)
 			{
-				duty_cycl[i] = fabs(1/sin(PI/3)*sin(omega*timelapsed + color_phase[i]));
+				duty_cycl[i] = 0.5*sin(omega*timelapsed + color_phase[i]) + 0.5;
 				duty_cycl[i] = (duty_cycl[i] <= 0)?0:duty_cycl[i];	// Clamp
 				duty_cycl[i] = (duty_cycl[i] >= 1)?1:duty_cycl[i];	// Clamp
 				rgb_PWM[i] = bright_scala*(double)htiem2.Init.Period*duty_cycl[i];
